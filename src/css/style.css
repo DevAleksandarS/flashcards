@@ -131,6 +131,8 @@ button {
   padding: 10px;
 
   background-color: #eee;
+
+  border-bottom: 1px solid #555;
 }
 
 .p-q {
@@ -144,4 +146,10 @@ button {
   background-color: black;
 
   margin: 10px 0;
+}
+
+.btn-delete:hover {
+  background-color: #d30000;
+
+  color: #fff;
 }

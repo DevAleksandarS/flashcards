@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import FlashCardsDisplay from "./FlashCardsDisplay";
 
 function FlashCards({ cards, visibility, dispatch }) {
-  let [currentQuestion, setCurrentQuestion] = useState(0);
+  const nextCardRef = useRef();
 
   return (
     <>
@@ -13,11 +13,11 @@ function FlashCards({ cards, visibility, dispatch }) {
         className={`black-bg ${visibility}`}
       ></div>
       <div className={`block ${visibility}`}>
-        <FlashCardsDisplay currentQuestion={currentQuestion} cards={cards} />
+        <FlashCardsDisplay ref={nextCardRef} cards={cards} />
         <button
           onClick={(e) => {
             e.preventDefault();
-            setCurrentQuestion(currentQuestion++);
+            nextCardRef.current.correctBtn();
           }}
           className="btn"
         >
@@ -26,7 +26,7 @@ function FlashCards({ cards, visibility, dispatch }) {
         <button
           onClick={(e) => {
             e.preventDefault();
-            setCurrentQuestion(currentQuestion++);
+            nextCardRef.current.incorrectBtn();
           }}
           className="btn margin-l"
         >

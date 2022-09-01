@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useState, useImperativeHandle } from "react";
 import { BiDownArrowAlt } from "react-icons/bi";
 
-function FlashCardsDisplay({ currentQuestion, cards }) {
+function FlashCardsDisplay({ cards }, ref) {
+  let [currentQuestion, setCurrentQuestion] = useState(0);
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        correctBtn: () => setCurrentQuestion(currentQuestion++),
+        incorrectBtn: () => setCurrentQuestion(currentQuestion++),
+      };
+    },
+    []
+  );
+
   const cardCheck = () => {
     if (cards.length > 0) {
       return true;
@@ -21,4 +34,4 @@ function FlashCardsDisplay({ currentQuestion, cards }) {
   );
 }
 
-export default FlashCardsDisplay;
+export default React.forwardRef(FlashCardsDisplay);

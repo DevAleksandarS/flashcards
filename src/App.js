@@ -1,4 +1,5 @@
 import React, { useState, useReducer } from "react";
+import uuid from "react-uuid";
 import "./css/style.css";
 import AddCards from "./components/AddCards";
 import FlashCards from "./components/FlashCards";
@@ -45,7 +46,11 @@ function App() {
   const [cards, setCards] = useState([]);
 
   function addCard(question, answer) {
-    setCards([...cards, { question: question, answer: answer }]);
+    setCards([...cards, { id: uuid(), question: question, answer: answer }]);
+  }
+
+  function deleteCard(id) {
+    setCards(cards.filter((card) => card.id !== id));
   }
 
   return (
@@ -99,6 +104,7 @@ function App() {
         cards={cards}
         visibility={state.deleteCard}
         dispatch={dispatch}
+        deleteCard={deleteCard}
       />
     </div>
   );
