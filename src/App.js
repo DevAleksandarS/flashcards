@@ -43,7 +43,7 @@ function App() {
     deleteCard: "non-visible",
   });
 
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([{ id: "", question: "", answer: "" }]);
 
   function addCard(question, answer) {
     setCards([...cards, { id: uuid(), question: question, answer: answer }]);
@@ -98,7 +98,7 @@ function App() {
       <FlashCards
         cards={cards}
         visibility={state.flashcards}
-        dispatch={dispatch}
+        appDispatch={dispatch}
       />
       <DeleteCard
         cards={cards}
