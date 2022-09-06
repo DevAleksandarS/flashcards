@@ -95,7 +95,8 @@ function App() {
         </button>
         <button
           onClick={() => {
-            setCards([]);
+            setCards([{ id: "", question: "", answer: "" }]);
+            btnRef.current.reset();
           }}
         >
           Delete All Cards
@@ -127,7 +128,7 @@ function App() {
         dispatch={dispatch}
         deleteCard={deleteCard}
       />
-      <ResultsDisplay />
+      <ResultsDisplay visibility={state.deleteCard} dispatch={dispatch} />
     </div>
   );
 }
