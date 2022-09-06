@@ -1,4 +1,4 @@
-import React, { useReducer, useImperativeHandle } from "react";
+import React, { useState, useReducer, useImperativeHandle } from "react";
 import { BiChevronDown } from "react-icons/bi";
 
 const reducer = (state, action) => {
@@ -10,6 +10,14 @@ const reducer = (state, action) => {
         answer: state.answer,
         correct: state.correct,
         incorrect: state.incorrect,
+      };
+    case "RESET":
+      return {
+        currentQuestion: 0,
+        question: action.payload[state.currentQuestion].question,
+        answer: action.payload[state.currentQuestion].answer,
+        correct: 0,
+        incorrect: 0,
       };
     case "UPDATE_CURRENT_QUESTION":
       return {
@@ -40,12 +48,18 @@ const reducer = (state, action) => {
   }
 };
 
-function FlashCards({ cards, visibility, appDispatch }, ref) {
+function FlashCards(
+  { cards, visibility, appDispatch, displayResultsBlock },
+  ref
+) {
   useImperativeHandle(ref, () => {
     return {
       updateCurrentQuestion: () => {
         dispatch({ type: "CURRENT_QUESTION" });
         dispatch({ type: "UPDATE_CURRENT_QUESTION", payload: cards });
+      },
+      reset: () => {
+        dispatch({ type: "RESET", payload: cards });
       },
     };
   });
@@ -57,6 +71,8 @@ function FlashCards({ cards, visibility, appDispatch }, ref) {
     correct: 0,
     incorrect: 0,
   });
+
+  const [answerReveal, setAnswerReveal] = useState("0");
 
   return (
     <>
@@ -70,21 +86,34 @@ function FlashCards({ cards, visibility, appDispatch }, ref) {
         <p className="p">Question:</p>
         <p className="p">{state.question}</p>
         <div className="line"></div>
-        <button className="btn-answer">
+        <button
+          onClick={() =>
+            answerReveal === "0"
+              ? setAnswerReveal("190px")
+              : setAnswerReveal("0")
+          }
+          className="btn-answer"
+        >
           Answer
           <BiChevronDown />
         </button>
+        <div
+          className="answer-block"
+          style={{ width: "100%", height: answerReveal }}
+        >
+          {state.answer}
+        </div>
 
         <button
           onClick={(e) => {
             e.preventDefault();
             if (state.currentQuestion < cards.length - 1) {
+              setAnswerReveal("0");
               dispatch({ type: "CURRENT_QUESTION" });
               dispatch({ type: "CORRECT_ANSWER", payload: cards });
             }
             if (state.currentQuestion == cards.length - 1) {
-              console.log(state.currentQuestion);
-              console.log(cards.length);
+              displayResultsBlock();
             }
           }}
           className="btn"
@@ -95,8 +124,12 @@ function FlashCards({ cards, visibility, appDispatch }, ref) {
           onClick={(e) => {
             e.preventDefault();
             if (state.currentQuestion < cards.length - 1) {
+              setAnswerReveal("0");
               dispatch({ type: "CURRENT_QUESTION" });
               dispatch({ type: "INCORRECT_ANSWER", payload: cards });
+            }
+            if (state.currentQuestion == cards.length - 1) {
+              displayResultsBlock();
             }
           }}
           className="btn margin-l"

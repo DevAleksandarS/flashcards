@@ -163,3 +163,11 @@ button {
 
   font-size: 25px;
 }
+
+.answer-block {
+  background-color: #eee;
+
+  overflow-y: scroll;
+
+  font-size: 30px;
+}

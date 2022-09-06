@@ -4,6 +4,7 @@ import "./css/style.css";
 import AddCards from "./components/AddCards";
 import FlashCards from "./components/FlashCards";
 import DeleteCard from "./components/DeleteCard";
+import ResultsDisplay from "./components/ResultsDisplay";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -12,24 +13,35 @@ const reducer = (state, action) => {
         addCards: "visible",
         flashcards: "non-visible",
         deleteCard: "non-visible",
+        resultsDisplay: "non-visible",
       };
     case "FLASHCARDS_BLOCK":
       return {
         addCards: "non-visible",
         flashcards: "visible",
         deleteCard: "non-visible",
+        resultsDisplay: "non-visible",
       };
     case "DELETE_CARD_BLOCK":
       return {
         addCards: "non-visible",
         flashcards: "non-visible",
         deleteCard: "visible",
+        resultsDisplay: "non-visible",
+      };
+    case "RESULTS_DISPLAY_BLOCK":
+      return {
+        addCards: "non-visible",
+        flashcards: "non-visible",
+        deleteCard: "visible",
+        resultsDisplay: "visible",
       };
     case "CLOSE":
       return {
         addCards: "non-visible",
         flashcards: "non-visible",
         deleteCard: "non-visible",
+        resultsDisplay: "non-visible",
       };
     default:
       return state;
@@ -53,6 +65,10 @@ function App() {
 
   function deleteCard(id) {
     setCards(cards.filter((card) => card.id !== id));
+  }
+
+  function displayResultsBlock() {
+    dispatch({ type: "RESULTS_DISPLAY_BLOCK" });
   }
 
   return (
@@ -102,6 +118,7 @@ function App() {
         cards={cards}
         visibility={state.flashcards}
         appDispatch={dispatch}
+        displayResultsBlock={displayResultsBlock}
         ref={btnRef}
       />
       <DeleteCard
@@ -110,6 +127,7 @@ function App() {
         dispatch={dispatch}
         deleteCard={deleteCard}
       />
+      <ResultsDisplay />
     </div>
   );
 }
