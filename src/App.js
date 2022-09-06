@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useRef } from "react";
 import uuid from "react-uuid";
 import "./css/style.css";
 import AddCards from "./components/AddCards";
@@ -45,6 +45,8 @@ function App() {
 
   const [cards, setCards] = useState([{ id: "", question: "", answer: "" }]);
 
+  const btnRef = useRef();
+
   function addCard(question, answer) {
     setCards([...cards, { id: uuid(), question: question, answer: answer }]);
   }
@@ -69,6 +71,7 @@ function App() {
               alert("You need to create at least 4 cards!");
             } else {
               dispatch({ type: "FLASHCARDS_BLOCK" });
+              btnRef.current.updateCurrentQuestion();
             }
           }}
         >
@@ -99,6 +102,7 @@ function App() {
         cards={cards}
         visibility={state.flashcards}
         appDispatch={dispatch}
+        ref={btnRef}
       />
       <DeleteCard
         cards={cards}

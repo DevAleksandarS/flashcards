@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useImperativeHandle } from "react";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -7,6 +7,14 @@ const reducer = (state, action) => {
         currentQuestion: state.currentQuestion++,
         question: state.question,
         answer: state.answer,
+        correct: state.correct,
+        incorrect: state.incorrect,
+      };
+    case "UPDATE_CURRENT_QUESTION":
+      return {
+        currentQuestion: state.currentQuestion,
+        question: action.payload[state.currentQuestion].question,
+        answer: action.payload[state.currentQuestion].answer,
         correct: state.correct,
         incorrect: state.incorrect,
       };
@@ -31,7 +39,16 @@ const reducer = (state, action) => {
   }
 };
 
-function FlashCards({ cards, visibility, appDispatch }) {
+function FlashCards({ cards, visibility, appDispatch }, ref) {
+  useImperativeHandle(ref, () => {
+    return {
+      updateCurrentQuestion: () => {
+        dispatch({ type: "CURRENT_QUESTION" });
+        dispatch({ type: "UPDATE_CURRENT_QUESTION", payload: cards });
+      },
+    };
+  });
+
   const [state, dispatch] = useReducer(reducer, {
     currentQuestion: 0,
     question: cards[0].question,
@@ -85,4 +102,4 @@ function FlashCards({ cards, visibility, appDispatch }) {
   );
 }
 
-export default FlashCards;
+export default React.forwardRef(FlashCards);
