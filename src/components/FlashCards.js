@@ -1,4 +1,5 @@
 import React, { useReducer, useImperativeHandle } from "react";
+import { BiChevronDown } from "react-icons/bi";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -68,12 +69,23 @@ function FlashCards({ cards, visibility, appDispatch }, ref) {
       <div className={`block ${visibility}`}>
         <p className="p">Question:</p>
         <p className="p">{state.question}</p>
+        <div className="line"></div>
+        <button className="btn-answer">
+          Answer
+          <BiChevronDown />
+        </button>
 
         <button
           onClick={(e) => {
             e.preventDefault();
-            dispatch({ type: "CURRENT_QUESTION" });
-            dispatch({ type: "CORRECT_ANSWER", payload: cards });
+            if (state.currentQuestion < cards.length - 1) {
+              dispatch({ type: "CURRENT_QUESTION" });
+              dispatch({ type: "CORRECT_ANSWER", payload: cards });
+            }
+            if (state.currentQuestion == cards.length - 1) {
+              console.log(state.currentQuestion);
+              console.log(cards.length);
+            }
           }}
           className="btn"
         >
@@ -82,8 +94,10 @@ function FlashCards({ cards, visibility, appDispatch }, ref) {
         <button
           onClick={(e) => {
             e.preventDefault();
-            dispatch({ type: "CURRENT_QUESTION" });
-            dispatch({ type: "INCORRECT_ANSWER", payload: cards });
+            if (state.currentQuestion < cards.length - 1) {
+              dispatch({ type: "CURRENT_QUESTION" });
+              dispatch({ type: "INCORRECT_ANSWER", payload: cards });
+            }
           }}
           className="btn margin-l"
         >
