@@ -30,16 +30,16 @@ const reducer = (state, action) => {
     case "CORRECT_ANSWER":
       return {
         currentQuestion: state.currentQuestion,
-        question: action.payload[state.currentQuestion].question,
-        answer: action.payload[state.currentQuestion].answer,
+        question: state.question,
+        answer: state.answer,
         correct: state.correct++,
         incorrect: state.incorrect,
       };
     case "INCORRECT_ANSWER":
       return {
         currentQuestion: state.currentQuestion,
-        question: action.payload[state.currentQuestion].question,
-        answer: action.payload[state.currentQuestion].answer,
+        question: state.question,
+        answer: state.answer,
         correct: state.correct,
         incorrect: state.incorrect++,
       };
@@ -105,35 +105,35 @@ function FlashCards(
         </div>
 
         <button
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             if (state.currentQuestion < cards.length - 1) {
               setAnswerReveal("0");
               dispatch({ type: "CURRENT_QUESTION" });
-              dispatch({ type: "CORRECT_ANSWER", payload: cards });
+              dispatch({ type: "UPDATE_CURRENT_QUESTION", payload: cards });
             }
             if (state.currentQuestion == cards.length - 1) {
               getCorrectIncorrect(state.correct, state.incorrect);
               displayResultsBlock();
             }
           }}
+          onMouseDown={() => dispatch({ type: "CORRECT_ANSWER" })}
           className="btn"
         >
           Correct
         </button>
         <button
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={() => {
             if (state.currentQuestion < cards.length - 1) {
               setAnswerReveal("0");
               dispatch({ type: "CURRENT_QUESTION" });
-              dispatch({ type: "INCORRECT_ANSWER", payload: cards });
+              dispatch({ type: "UPDATE_CURRENT_QUESTION", payload: cards });
             }
             if (state.currentQuestion == cards.length - 1) {
               getCorrectIncorrect(state.correct, state.incorrect);
               displayResultsBlock();
             }
           }}
+          onMouseDown={() => dispatch({ type: "INCORRECT_ANSWER" })}
           className="btn margin-l"
         >
           Incorrect
