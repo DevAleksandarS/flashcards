@@ -13,7 +13,7 @@ const reducer = (state, action) => {
       };
     case "RESET":
       return {
-        currentQuestion: 0,
+        currentQuestion: 1,
         question: action.payload[state.currentQuestion].question,
         answer: action.payload[state.currentQuestion].answer,
         correct: 0,
@@ -49,7 +49,7 @@ const reducer = (state, action) => {
 };
 
 function FlashCards(
-  { cards, visibility, appDispatch, displayResultsBlock },
+  { cards, visibility, appDispatch, getCorrectIncorrect, displayResultsBlock },
   ref
 ) {
   useImperativeHandle(ref, () => {
@@ -113,6 +113,7 @@ function FlashCards(
               dispatch({ type: "CORRECT_ANSWER", payload: cards });
             }
             if (state.currentQuestion == cards.length - 1) {
+              getCorrectIncorrect(state.correct, state.incorrect);
               displayResultsBlock();
             }
           }}
@@ -129,6 +130,7 @@ function FlashCards(
               dispatch({ type: "INCORRECT_ANSWER", payload: cards });
             }
             if (state.currentQuestion == cards.length - 1) {
+              getCorrectIncorrect(state.correct, state.incorrect);
               displayResultsBlock();
             }
           }}

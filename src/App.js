@@ -33,7 +33,7 @@ const reducer = (state, action) => {
       return {
         addCards: "non-visible",
         flashcards: "non-visible",
-        deleteCard: "visible",
+        deleteCard: "non-visible",
         resultsDisplay: "visible",
       };
     case "CLOSE":
@@ -53,9 +53,15 @@ function App() {
     addCards: "non-visible",
     flashcards: "non-visible",
     deleteCard: "non-visible",
+    resultsDisplay: "non-visible",
   });
 
   const [cards, setCards] = useState([{ id: "", question: "", answer: "" }]);
+
+  const [correctIncorrect, setCorrectIncorrect] = useState({
+    correct: 0,
+    incorrect: 0,
+  });
 
   const btnRef = useRef();
 
@@ -63,8 +69,16 @@ function App() {
     setCards([...cards, { id: uuid(), question: question, answer: answer }]);
   }
 
-  function deleteCard(id) {
+  function deleteCardFunc(id) {
     setCards(cards.filter((card) => card.id !== id));
+    btnRef.current.reset();
+  }
+
+  function getCorrectIncorrect(correct, incorrect) {
+    setCorrectIncorrect({
+      correct: correct,
+      incorrect: incorrect,
+    });
   }
 
   function displayResultsBlock() {
@@ -84,10 +98,11 @@ function App() {
         <button
           onClick={() => {
             if (cards.length <= 3) {
-              alert("You need to create at least 4 cards!");
+              alert("You need to create at least 3 cards!");
             } else {
-              dispatch({ type: "FLASHCARDS_BLOCK" });
+              btnRef.current.reset();
               btnRef.current.updateCurrentQuestion();
+              dispatch({ type: "FLASHCARDS_BLOCK" });
             }
           }}
         >
@@ -102,7 +117,8 @@ function App() {
           Delete All Cards
         </button>
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
             dispatch({ type: "DELETE_CARD_BLOCK" });
           }}
         >
@@ -119,6 +135,7 @@ function App() {
         cards={cards}
         visibility={state.flashcards}
         appDispatch={dispatch}
+        getCorrectIncorrect={getCorrectIncorrect}
         displayResultsBlock={displayResultsBlock}
         ref={btnRef}
       />
@@ -126,9 +143,13 @@ function App() {
         cards={cards}
         visibility={state.deleteCard}
         dispatch={dispatch}
-        deleteCard={deleteCard}
+        deleteCardFunc={deleteCardFunc}
       />
-      <ResultsDisplay visibility={state.deleteCard} dispatch={dispatch} />
+      <ResultsDisplay
+        visibility={state.resultsDisplay}
+        dispatch={dispatch}
+        correctIncorrect={correctIncorrect}
+      />
     </div>
   );
 }

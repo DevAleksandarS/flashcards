@@ -1,6 +1,6 @@
 import React from "react";
 
-function ResultsDisplay({ visibility, dispatch }) {
+function ResultsDisplay({ visibility, dispatch, correctIncorrect }) {
   return (
     <>
       <div
@@ -9,7 +9,11 @@ function ResultsDisplay({ visibility, dispatch }) {
         }}
         className={`black-bg ${visibility}`}
       ></div>
-      <div className={`block ${visibility}`}></div>
+      <div className={`block ${visibility}`}>
+        <p>Correct: {correctIncorrect.correct}</p>
+        <p>Incorrect: {correctIncorrect.incorrect}</p>
+        <button onClick={() => dispatch({ type: "CLOSE" })}>Close</button>
+      </div>
     </>
   );
 }
